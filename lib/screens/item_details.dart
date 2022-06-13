@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery_app/screens/cart_screen.dart';
 import 'package:food_delivery_app/util/data_list.dart';
 import 'package:food_delivery_app/widgets/ingredients_widget.dart';
+
+import '../util/favList.dart';
+import '../widgets/list_widget.dart';
 
 class ItemDetails extends StatefulWidget {
   var image;
@@ -24,13 +28,17 @@ class ItemDetails extends StatefulWidget {
 }
 
 class _ItemDetailsState extends State<ItemDetails> {
+  var count = 1;
+  var newPrice;
+
   @override
   Widget build(BuildContext context) {
-    // int s = 0;
-    // for (int i = 0; i < dataList.length; i++) {
-    //   s = s + 1;
-    // }
-    // print(dataList[1]['ingredients'].length);
+    if (newPrice == null) {
+      setState(() {
+        newPrice = widget.price;
+      });
+    }
+    var totalPrice = widget.price;
     return Scaffold(
       // appBar: AppBar(
       //   backgroundColor: Colors.transparent,
@@ -67,6 +75,9 @@ class _ItemDetailsState extends State<ItemDetails> {
         padding: EdgeInsets.only(left: 30, right: 30, top: 30),
         child: Column(
           children: [
+            SizedBox(
+              height: 15,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -94,9 +105,49 @@ class _ItemDetailsState extends State<ItemDetails> {
                 Container(
                   // color: Colors.blue,
                   margin: EdgeInsets.only(left: 80),
-                  child: Icon(
-                    Icons.favorite,
-                    size: 23,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        if (likeList.contains(widget.title)) {
+                          likeList.remove(widget.title);
+                          favList.removeWhere(
+                            (element) => element['title'] == widget.title,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              margin: EdgeInsets.all(20),
+                              dismissDirection: DismissDirection.horizontal,
+                              content: Text("Removed"),
+                              duration: Duration(seconds: 1)));
+                        } else {
+                          likeList.add(widget.title);
+                          favList.add({
+                            'title': widget.title,
+                            'img': widget.image,
+                            'price': widget.price,
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              margin: EdgeInsets.all(20),
+                              dismissDirection: DismissDirection.horizontal,
+                              content: Text("Added"),
+                              duration: Duration(seconds: 1)));
+                        }
+                      });
+                    },
+                    child: likeList.contains(widget.title)
+                        ? Icon(Icons.favorite,
+                            size: 25, color: Colors.redAccent.withOpacity(.9))
+                        : Icon(
+                            Icons.favorite_border_outlined,
+                            size: 25,
+                          ),
                   ),
                 ),
               ],
@@ -168,21 +219,39 @@ class _ItemDetailsState extends State<ItemDetails> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(
-                        Icons.remove,
-                        color: Colors.grey,
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            if (count > 1) {
+                              count--;
+                            }
+                            newPrice = totalPrice * count;
+                          });
+                        },
+                        child: Icon(
+                          Icons.remove,
+                          color: Colors.grey,
+                        ),
                       ),
                       Text(
-                        "1",
+                        count.toString(),
                         style: TextStyle(
                           fontSize: 18,
                           fontFamily: 'Roboto',
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      Icon(
-                        Icons.add,
-                        color: Colors.grey,
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            count++;
+                            newPrice = totalPrice * count;
+                          });
+                        },
+                        child: Icon(
+                          Icons.add,
+                          color: Colors.grey,
+                        ),
                       ),
                     ],
                   ),
@@ -304,7 +373,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: widget.price.toString(),
+                                  text: newPrice.toString(),
                                   style: TextStyle(
                                     color: Colors.black.withOpacity(.8),
                                     fontSize: 25,
@@ -315,28 +384,67 @@ class _ItemDetailsState extends State<ItemDetails> {
                               ]),
                             ),
                           ),
-                          Container(
-                            alignment: Alignment.center,
-                            width: 150,
-                            height: 40,
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(.2),
-                                    spreadRadius: 2,
-                                    blurRadius: 8,
-                                    offset: Offset(0, 2), // Shadow position
-                                  ),
-                                ],
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(12)),
-                            child: Text(
-                              "Add to cart",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontFamily: 'Roboto',
-                                fontWeight: FontWeight.w400,
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                if (isCartList.contains(widget.title)) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CartScreen(),
+                                      ));
+                                } else {
+                                  isCartList.add(widget.title);
+                                  CartList.add({
+                                    'image': widget.image,
+                                    "title": widget.title,
+                                    "price": totalPrice,
+                                    "count": count
+                                  });
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          behavior: SnackBarBehavior.floating,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          margin: EdgeInsets.only(
+                                              left: 20, bottom: 100, right: 20),
+                                          dismissDirection:
+                                              DismissDirection.horizontal,
+                                          content: Text("Added"),
+                                          duration: Duration(seconds: 1)));
+                                }
+                              });
+
+                              // print(CartList);
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: 150,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(.2),
+                                      spreadRadius: 2,
+                                      blurRadius: 8,
+                                      offset: Offset(0, 2), // Shadow position
+                                    ),
+                                  ],
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(12)),
+                              child: Text(
+                                isCartList.contains(widget.title)
+                                    ? "Go to cart"
+                                    : "Add to cart",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontFamily: 'Roboto',
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
                             ),
                           ),

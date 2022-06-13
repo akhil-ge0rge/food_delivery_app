@@ -4,7 +4,7 @@ List<Map<String, dynamic>> dataList = [
     "title": "American Burger",
     "rating": 4.8,
     "km": 5.3,
-    "price": 9.9,
+    "price": 9,
     "desc":
         "Peroni Nastro Azzurro-marinated beef adds a contemporary Italian twist to the all-American burger.",
     "ingredients": [
@@ -35,7 +35,7 @@ List<Map<String, dynamic>> dataList = [
     "title": "Smoked Beef Burger",
     "rating": 4.5,
     "km": 4.0,
-    "price": 9.5,
+    "price": 8,
     "desc":
         "A delicious balancing act of spicy, creamy, meaty, smoky and sour.",
     "ingredients": [
@@ -62,7 +62,7 @@ List<Map<String, dynamic>> dataList = [
     "title": "Indian Veg Burger",
     "rating": 4.8,
     "km": 5.3,
-    "price": 9.6,
+    "price": 7,
     "desc":
         "These Indian Style Veggie Burgers are tasty and filling that do not fall apart. Spicy burgers, tangy sauce, pickled onions and fresh salad makes for flavor packed nutritious meal. Can be made in the air fryer or shallow fried.",
     "ingredients": [

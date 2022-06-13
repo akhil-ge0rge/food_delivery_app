@@ -3,8 +3,11 @@ import 'package:food_delivery_app/util/data_list.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
-class ListWid extends StatelessWidget {
+import '../util/favList.dart';
+
+class ListWid extends StatefulWidget {
   final String image;
+
   final String title;
   final String rating;
   final String km;
@@ -19,7 +22,16 @@ class ListWid extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<ListWid> createState() => _ListWidState();
+}
+
+class _ListWidState extends State<ListWid> {
+  bool _isFav = false;
+
+  @override
   Widget build(BuildContext context) {
+    print(favList);
+    print(likeList);
     return Container(
       margin: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
       height: 30,
@@ -49,21 +61,65 @@ class ListWid extends StatelessWidget {
               height: 35,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Color(0xfffef2f5).withOpacity(.6),
+                color: Color.fromARGB(255, 254, 219, 228).withOpacity(.6),
               ),
-              child: Icon(
-                Icons.favorite,
-                color: Colors.redAccent.withOpacity(.9),
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    if (likeList.contains(widget.title)) {
+                      likeList.remove(widget.title);
+                      favList.removeWhere(
+                        (element) => element['title'] == widget.title,
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          margin: EdgeInsets.all(20),
+                          dismissDirection: DismissDirection.horizontal,
+                          content: Text("Removed"),
+                          duration: Duration(seconds: 1)));
+                    } else {
+                      likeList.add(widget.title);
+                      favList.add({
+                        'title': widget.title,
+                        'img': widget.image,
+                        'price': widget.price,
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          margin: EdgeInsets.all(20),
+                          dismissDirection: DismissDirection.horizontal,
+                          content: Text("Added"),
+                          duration: Duration(seconds: 1)));
+                    }
+                  });
+                },
+                child: likeList.contains(widget.title)
+                    ? Icon(
+                        Icons.favorite,
+                        size: 25,
+                        color: Colors.redAccent.withOpacity(.9),
+                      )
+                    : Icon(
+                        Icons.favorite,
+                        color: Colors.grey[50],
+                        size: 25,
+                      ),
               ),
             ),
           ),
           Image(
             height: 120,
             width: 120,
-            image: AssetImage(image),
+            image: AssetImage(widget.image),
           ),
           Text(
-            title,
+            widget.title,
             style: TextStyle(
               fontSize: 15,
               fontFamily: 'Roboto',
@@ -85,7 +141,7 @@ class ListWid extends StatelessWidget {
                 width: 4,
               ),
               Text(
-                rating.toString(),
+                widget.rating.toString(),
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 15,
@@ -97,7 +153,7 @@ class ListWid extends StatelessWidget {
                 width: 10,
               ),
               Text(
-                "${km} km",
+                "${widget.km} km",
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 15,
@@ -130,7 +186,7 @@ class ListWid extends StatelessWidget {
                 ),
               ),
               TextSpan(
-                text: price,
+                text: widget.price,
                 style: TextStyle(
                   color: Colors.black.withOpacity(.8),
                   fontSize: 20,
