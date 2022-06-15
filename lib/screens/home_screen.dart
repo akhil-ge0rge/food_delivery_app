@@ -227,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: ListWid(
                           image: dataList[index]['image'],
                           title: dataList[index]['title'],
-                          rating: "${dataList[index]['rating']}",
+                          rating: "${dataList[index]['rating'].toString()}",
                           km: dataList[index]['km'],
                           price: dataList[index]['price']),
                     );

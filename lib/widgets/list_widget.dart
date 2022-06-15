@@ -26,12 +26,19 @@ class ListWid extends StatefulWidget {
 }
 
 class _ListWidState extends State<ListWid> {
-  bool _isFav = false;
+  bool isFav = false;
+  var favListIndex;
 
   @override
   Widget build(BuildContext context) {
-    // print(favList);
-    // print(likeList);
+    for (int i = 0; i < favList.length; i++) {
+      if (favList[i]['title'] == widget.title) {
+        isFav = true;
+        favListIndex = i;
+        setState(() {});
+        break;
+      }
+    }
     return Container(
       margin: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
       height: 30,
@@ -65,41 +72,20 @@ class _ListWidState extends State<ListWid> {
               ),
               child: GestureDetector(
                 onTap: () {
-                  setState(() {
-                    if (likeList.contains(widget.title)) {
-                      likeList.remove(widget.title);
-                      favList.removeWhere(
-                        (element) => element['title'] == widget.title,
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          margin: EdgeInsets.all(20),
-                          dismissDirection: DismissDirection.horizontal,
-                          content: Text("Removed"),
-                          duration: Duration(seconds: 1)));
-                    } else {
-                      likeList.add(widget.title);
-                      favList.add({
-                        'title': widget.title,
-                        'img': widget.image,
-                        'price': widget.price,
-                      });
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          margin: EdgeInsets.all(20),
-                          dismissDirection: DismissDirection.horizontal,
-                          content: Text("Added"),
-                          duration: Duration(seconds: 1)));
-                    }
-                  });
+                  if (isFav == true) {
+                    favList.removeAt(favListIndex);
+                    isFav = false;
+                  } else {
+                    favList.add({
+                      'title': widget.title,
+                      'img': widget.image,
+                      'price': widget.price,
+                    });
+                    isFav = true;
+                  }
+                  setState(() {});
                 },
-                child: likeList.contains(widget.title)
+                child: isFav == true
                     ? Icon(
                         Icons.favorite,
                         size: 25,

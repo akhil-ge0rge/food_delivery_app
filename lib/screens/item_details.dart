@@ -30,7 +30,10 @@ class ItemDetails extends StatefulWidget {
 class _ItemDetailsState extends State<ItemDetails> {
   var count = 1;
   var newPrice;
-
+  bool isCart = false;
+  var CartListIndex;
+  bool itemIsFav = false;
+  var itemFavIndex;
   @override
   Widget build(BuildContext context) {
     if (newPrice == null) {
@@ -39,36 +42,26 @@ class _ItemDetailsState extends State<ItemDetails> {
       });
     }
     var totalPrice = widget.price;
+
+    for (int i = 0; i < CartList.length; i++) {
+      if (CartList[i]['title'] == widget.title) {
+        isCart = true;
+        CartListIndex = i;
+        setState(() {});
+        break;
+      }
+    }
+
+    for (int i = 0; i < favList.length; i++) {
+      if (favList[i]['title'] == widget.title) {
+        itemIsFav = true;
+        itemFavIndex = i;
+        setState(() {});
+        break;
+      }
+    }
+
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0,
-      //   centerTitle: true,
-      //   leading: Container(
-      //     margin: EdgeInsets.only(left: 25),
-      //     child: Icon(
-      //       Icons.arrow_back_ios,
-      //       size: 23,
-      //     ),
-      //   ),
-      //   title: Text(
-      //     "Details",
-      //     style: TextStyle(
-      //       fontSize: 24,
-      //       fontFamily: 'Roboto',
-      //       fontWeight: FontWeight.w600,
-      //     ),
-      //   ),
-      //   actions: [
-      //     Icon(
-      //       Icons.favorite,
-      //       size: 23,
-      //     ),
-      //     SizedBox(
-      //       width: 25,
-      //     ),
-      //   ],
-      // ),
       body: Container(
         //   color: Colors.amber,
         // ),
@@ -107,41 +100,21 @@ class _ItemDetailsState extends State<ItemDetails> {
                   margin: EdgeInsets.only(left: 80),
                   child: GestureDetector(
                     onTap: () {
-                      setState(() {
-                        if (likeList.contains(widget.title)) {
-                          likeList.remove(widget.title);
-                          favList.removeWhere(
-                            (element) => element['title'] == widget.title,
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              behavior: SnackBarBehavior.floating,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              margin: EdgeInsets.all(20),
-                              dismissDirection: DismissDirection.horizontal,
-                              content: Text("Removed"),
-                              duration: Duration(seconds: 1)));
-                        } else {
-                          likeList.add(widget.title);
-                          favList.add({
-                            'title': widget.title,
-                            'img': widget.image,
-                            'price': widget.price,
-                          });
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              behavior: SnackBarBehavior.floating,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              margin: EdgeInsets.all(20),
-                              dismissDirection: DismissDirection.horizontal,
-                              content: Text("Added"),
-                              duration: Duration(seconds: 1)));
-                        }
-                      });
+                      if (itemIsFav == true) {
+                        favList.removeAt(itemFavIndex);
+                        itemIsFav = false;
+                      } else {
+                        favList.add({
+                          'title': widget.title,
+                          'img': widget.image,
+                          'price': widget.price,
+                        });
+
+                        itemIsFav = true;
+                      }
+                      setState(() {});
                     },
-                    child: likeList.contains(widget.title)
+                    child: itemIsFav == true
                         ? Icon(Icons.favorite,
                             size: 25, color: Colors.redAccent.withOpacity(.9))
                         : Icon(
@@ -386,39 +359,44 @@ class _ItemDetailsState extends State<ItemDetails> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              setState(() {
-                                if (isCartList.contains(widget.title)) {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => CartScreen(),
-                                      ));
-                                } else {
-                                  isCartList.add(widget.title);
-                                  CartList.add({
-                                    'image': widget.image,
-                                    "title": widget.title,
-                                    "price": totalPrice,
-                                    "count": count
-                                  });
+                              if (isCart == true) {
+                                CartList[CartListIndex]['count'] = count;
 
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          behavior: SnackBarBehavior.floating,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
-                                          margin: EdgeInsets.only(
-                                              left: 20, bottom: 100, right: 20),
-                                          dismissDirection:
-                                              DismissDirection.horizontal,
-                                          content: Text("Added"),
-                                          duration: Duration(seconds: 1)));
-                                }
-                              });
-
-                              // print(CartList);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        behavior: SnackBarBehavior.floating,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        margin: EdgeInsets.only(
+                                            left: 20, bottom: 100, right: 20),
+                                        dismissDirection:
+                                            DismissDirection.horizontal,
+                                        content: Text("Cart List Updated"),
+                                        duration: Duration(seconds: 1)));
+                              } else {
+                                CartList.add({
+                                  'image': widget.image,
+                                  "title": widget.title,
+                                  "price": totalPrice,
+                                  "count": count
+                                });
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        behavior: SnackBarBehavior.floating,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        margin: EdgeInsets.only(
+                                            left: 20, bottom: 100, right: 20),
+                                        dismissDirection:
+                                            DismissDirection.horizontal,
+                                        content: Text("Cart List Updated"),
+                                        duration: Duration(seconds: 1)));
+                              }
+                              setState(() {});
                             },
                             child: Container(
                               alignment: Alignment.center,
@@ -436,9 +414,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                                   color: Colors.black,
                                   borderRadius: BorderRadius.circular(12)),
                               child: Text(
-                                isCartList.contains(widget.title)
-                                    ? "Go to cart"
-                                    : "Add to cart",
+                                isCart == true ? "Update Cart" : "Add to cart",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,

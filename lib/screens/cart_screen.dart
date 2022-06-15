@@ -143,7 +143,7 @@ class _CartScreenState extends State<CartScreen> {
                                       setState(() {
                                         if (CartList[index]['count'] == 1) {
                                           CartList.removeAt(index);
-                                          isCartList.removeAt(index);
+
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(SnackBar(
                                                   behavior:

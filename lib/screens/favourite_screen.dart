@@ -84,23 +84,39 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                           items: <PopupMenuItem>[
                             PopupMenuItem(
                               onTap: () {
-                                if (isCartList
-                                    .contains(favList[index]['title'])) {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => CartScreen(),
-                                      ));
+                                if (CartList[index]['title'] ==
+                                    favList[index]['title']) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          behavior: SnackBarBehavior.floating,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          margin: EdgeInsets.all(20),
+                                          dismissDirection:
+                                              DismissDirection.horizontal,
+                                          content: Text("Alredy Existed"),
+                                          duration: Duration(seconds: 1)));
                                 } else {
-                                  isCartList.add(
-                                    favList[index]['title'],
-                                  );
                                   CartList.add({
                                     'image': favList[index]['img'],
                                     "title": favList[index]['title'],
                                     "price": favList[index]['price'],
                                     "count": 1
                                   });
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          behavior: SnackBarBehavior.floating,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          margin: EdgeInsets.all(20),
+                                          dismissDirection:
+                                              DismissDirection.horizontal,
+                                          content: Text("Added"),
+                                          duration: Duration(seconds: 1)));
                                 }
                                 print(
                                     "down favList : ${favList[0]['price'].runtimeType}");
