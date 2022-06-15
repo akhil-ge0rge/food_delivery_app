@@ -9,9 +9,9 @@ class ListWid extends StatefulWidget {
   final String image;
 
   final String title;
-  final String rating;
-  final String km;
-  final String price;
+  var rating;
+  var km;
+  var price;
   ListWid({
     Key? key,
     required this.image,
@@ -30,8 +30,8 @@ class _ListWidState extends State<ListWid> {
 
   @override
   Widget build(BuildContext context) {
-    print(favList);
-    print(likeList);
+    // print(favList);
+    // print(likeList);
     return Container(
       margin: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
       height: 30,
@@ -153,7 +153,7 @@ class _ListWidState extends State<ListWid> {
                 width: 10,
               ),
               Text(
-                "${widget.km} km",
+                "${widget.km.toString()} km",
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 15,
@@ -186,7 +186,7 @@ class _ListWidState extends State<ListWid> {
                 ),
               ),
               TextSpan(
-                text: widget.price,
+                text: widget.price.toString(),
                 style: TextStyle(
                   color: Colors.black.withOpacity(.8),
                   fontSize: 20,

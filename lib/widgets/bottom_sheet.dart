@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:food_delivery_app/screens/payment_screen.dart';
+
+import '../util/favList.dart';
 
 class CoustomBottomSheet extends StatefulWidget {
   CoustomBottomSheet({Key? key}) : super(key: key);
@@ -10,9 +13,20 @@ class CoustomBottomSheet extends StatefulWidget {
   State<CoustomBottomSheet> createState() => _CoustomBottomSheetState();
 }
 
+var discount = 3;
+var shipping = 2;
+
 class _CoustomBottomSheetState extends State<CoustomBottomSheet> {
   @override
   Widget build(BuildContext context) {
+    var totalAmount = 0;
+    var x;
+    for (int i = 0; i < CartList.length; i++) {
+      x = CartList[i]['price'] * CartList[i]['count'];
+      totalAmount = x + totalAmount;
+      setState(() {});
+    }
+
     return Container(
       height: 375,
       width: double.infinity,
@@ -21,7 +35,7 @@ class _CoustomBottomSheetState extends State<CoustomBottomSheet> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(
-            height: 10,
+            height: 5,
           ),
           Container(
             height: 4,
@@ -32,11 +46,15 @@ class _CoustomBottomSheetState extends State<CoustomBottomSheet> {
             ),
           ),
           SizedBox(
-            height: 100,
+            height: 45,
           ),
           Container(
-            color: Colors.blue,
-            height: 250,
+            margin: EdgeInsets.only(
+              left: 20,
+              right: 20,
+            ),
+            // color: Colors.blue,
+            height: 260,
             width: 300,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -44,7 +62,24 @@ class _CoustomBottomSheetState extends State<CoustomBottomSheet> {
                 Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text("Sub Total"), Text("\$24,90")],
+                    children: [
+                      Text(
+                        "Sub Total",
+                        style: TextStyle(
+                            color: Color(0xff9d9c9c),
+                            fontFamily: 'Roboto',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15),
+                      ),
+                      Text(
+                        "\$${totalAmount.toString()}",
+                        style: TextStyle(
+                            color: Color(0xff9d9c9c),
+                            fontFamily: 'Roboto',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15),
+                      ),
+                    ],
                   ),
                 ),
                 Container(
@@ -56,14 +91,16 @@ class _CoustomBottomSheetState extends State<CoustomBottomSheet> {
                         style: TextStyle(
                             color: Color(0xff9d9c9c),
                             fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w500),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15),
                       ),
                       Text(
-                        "\$0",
+                        "\$${shipping.toString()}",
                         style: TextStyle(
                             color: Color(0xff9d9c9c),
                             fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w500),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15),
                       ),
                     ],
                   ),
@@ -77,33 +114,119 @@ class _CoustomBottomSheetState extends State<CoustomBottomSheet> {
                         style: TextStyle(
                             color: Color(0xff9d9c9c),
                             fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w500),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15),
                       ),
                       Text(
-                        "\$0",
+                        "-\$${discount.toString()}",
                         style: TextStyle(
                             color: Color(0xff9d9c9c),
                             fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w500),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15),
                       ),
                     ],
                   ),
                 ),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "---------------------------",
-                        style:
-                            TextStyle(color: Color(0xffd8d9db), fontSize: 40),
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "- - - - - - - - - - - - - - - - - - - - - - - - - -",
+                          style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.w500,
+                              color: Color.fromARGB(255, 233, 233, 233),
+                              fontSize: 20),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Total",
+                            style: TextStyle(
+                                color: Color(0xff9d9c9c),
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16),
+                          ),
+                          Text(
+                            "\$${totalAmount - discount + shipping}",
+                            style: TextStyle(
+                                color: Color(0xfff9bc66),
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          )
+          ),
+          Container(
+            // color: Colors.red,
+            color: Color(0xfffefeff),
+            height: 50,
+            width: 300,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "\$${totalAmount - discount + shipping}",
+                  style: TextStyle(
+                      color: Color(0xff131212),
+                      fontFamily: 'Roboto',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  width: 150,
+                  decoration: BoxDecoration(
+                    color: Color(0xff131212),
+                    borderRadius: BorderRadius.circular(18),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(.5),
+                        spreadRadius: .1,
+                        blurRadius: 6,
+                        offset: Offset(0, 4), // Shadow position
+                      ),
+                    ],
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: ((context) => PaymentScreen(
+                      //               finalAmount: totalAmount,
+                      //             ))));
+                    },
+                    child: Text(
+                      "Pay now",
+                      style: TextStyle(
+                          color: Color(0xffa2a2a3),
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          // SizedBox(
+          //   height: 10,
+          // ),
         ],
       ),
     );

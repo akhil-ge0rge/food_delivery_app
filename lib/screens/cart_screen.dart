@@ -110,12 +110,13 @@ class _CartScreenState extends State<CartScreen> {
                                         color: Colors.orangeAccent,
                                         fontFamily: 'Roboto',
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 12),
+                                        fontSize: 13),
                                   ),
                                   Text(
-                                    (CartList[index]['price'] *
-                                            CartList[index]['count'])
-                                        .toString(),
+                                    "\$" +
+                                        (CartList[index]['price'] *
+                                                CartList[index]['count'])
+                                            .toString(),
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontFamily: 'Roboto',
@@ -203,11 +204,12 @@ class _CartScreenState extends State<CartScreen> {
                                           borderRadius:
                                               BorderRadius.circular(20)),
                                       child: Center(
-                                          child: Icon(
-                                        Icons.add,
-                                        size: 20,
-                                        color: Colors.white,
-                                      )),
+                                        child: Icon(
+                                          Icons.add,
+                                          size: 20,
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -229,11 +231,13 @@ class _CartScreenState extends State<CartScreen> {
       ),
       floatingActionButton: GestureDetector(
         onTap: () {
-          showModalBottomSheet(
-              context: context,
-              builder: (context) {
-                return CoustomBottomSheet();
-              });
+          setState(() {
+            showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return CoustomBottomSheet();
+                });
+          });
         },
         child: Container(
           alignment: Alignment.center,
@@ -246,10 +250,11 @@ class _CartScreenState extends State<CartScreen> {
           child: Text(
             "Check Out",
             style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.w600,
-                fontSize: 17),
+              color: Colors.white,
+              fontFamily: 'Roboto',
+              fontWeight: FontWeight.w600,
+              fontSize: 17,
+            ),
           ),
         ),
       ),
