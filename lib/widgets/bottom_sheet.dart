@@ -13,8 +13,8 @@ class CoustomBottomSheet extends StatefulWidget {
   State<CoustomBottomSheet> createState() => _CoustomBottomSheetState();
 }
 
-var discount = 3;
-var shipping = 2;
+var discount;
+var shipping;
 
 class _CoustomBottomSheetState extends State<CoustomBottomSheet> {
   @override
@@ -95,7 +95,7 @@ class _CoustomBottomSheetState extends State<CoustomBottomSheet> {
                             fontSize: 15),
                       ),
                       Text(
-                        "\$${shipping.toString()}",
+                        "${totalAmount == 0 ? shipping = 0 : shipping = 3}",
                         style: TextStyle(
                             color: Color(0xff9d9c9c),
                             fontFamily: 'Roboto',
@@ -118,7 +118,7 @@ class _CoustomBottomSheetState extends State<CoustomBottomSheet> {
                             fontSize: 15),
                       ),
                       Text(
-                        "-\$${discount.toString()}",
+                        "${totalAmount == 0 ? discount = 0 : discount = 1}",
                         style: TextStyle(
                             color: Color(0xff9d9c9c),
                             fontFamily: 'Roboto',
@@ -180,7 +180,7 @@ class _CoustomBottomSheetState extends State<CoustomBottomSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "\$${totalAmount - discount + shipping}",
+                  "\$${x = totalAmount - discount + shipping}",
                   style: TextStyle(
                       color: Color(0xff131212),
                       fontFamily: 'Roboto',
@@ -204,12 +204,13 @@ class _CoustomBottomSheetState extends State<CoustomBottomSheet> {
                   ),
                   child: InkWell(
                     onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: ((context) => PaymentScreen(
-                      //               finalAmount: totalAmount,
-                      //             ))));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: ((context) => PaymentScreen(
+                                    finalAmount: x,
+                                    discount: discount,
+                                  ))));
                     },
                     child: Text(
                       "Pay now",
