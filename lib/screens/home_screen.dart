@@ -10,6 +10,7 @@ import 'package:food_delivery_app/widgets/elevated_button.dart';
 import 'package:food_delivery_app/widgets/list_widget.dart';
 
 import '../util/data_list.dart';
+import '../util/favList.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -207,6 +208,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   scrollDirection: Axis.horizontal,
                   itemCount: dataList.length,
                   itemBuilder: ((context, index) {
+                    bool isFav = false;
+                    // var favListIndex;
+
+                    for (int i = 0; i < favList.length; i++) {
+                      if (favList[i]['title'] == dataList[index]['title']) {
+                        isFav = true;
+                        // favListIndex = i;
+                        // setState(() {});
+                        break;
+                      }
+                    }
                     return GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -225,6 +237,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         });
                       },
                       child: ListWid(
+                          isFav: isFav,
+                          indexL: index,
                           image: dataList[index]['image'],
                           title: dataList[index]['title'],
                           rating: "${dataList[index]['rating'].toString()}",

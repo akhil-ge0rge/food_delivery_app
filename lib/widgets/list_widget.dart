@@ -12,6 +12,8 @@ class ListWid extends StatefulWidget {
   var rating;
   var km;
   var price;
+  var isFav;
+  var indexL;
   ListWid({
     Key? key,
     required this.image,
@@ -19,6 +21,8 @@ class ListWid extends StatefulWidget {
     required this.rating,
     required this.km,
     required this.price,
+    required this.isFav,
+    required this.indexL,
   }) : super(key: key);
 
   @override
@@ -26,19 +30,19 @@ class ListWid extends StatefulWidget {
 }
 
 class _ListWidState extends State<ListWid> {
-  bool isFav = false;
-  var favListIndex;
+  // bool isFav = false;
+  // var favListIndex;
 
   @override
   Widget build(BuildContext context) {
-    for (int i = 0; i < favList.length; i++) {
-      if (favList[i]['title'] == widget.title) {
-        isFav = true;
-        favListIndex = i;
-        setState(() {});
-        break;
-      }
-    }
+    // for (int i = 0; i < favList.length; i++) {
+    //   if (favList[i]['title'] == widget.title) {
+    //     isFav = true;
+    //     favListIndex = i;
+    //     setState(() {});
+    //     break;
+    //   }
+    // }
     return Container(
       margin: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
       height: 30,
@@ -72,20 +76,20 @@ class _ListWidState extends State<ListWid> {
               ),
               child: GestureDetector(
                 onTap: () {
-                  if (isFav == true) {
-                    favList.removeAt(favListIndex);
-                    isFav = false;
+                  if (widget.isFav == true) {
+                    favList.removeAt(widget.indexL);
+                    widget.isFav = false;
                   } else {
                     favList.add({
                       'title': widget.title,
                       'img': widget.image,
                       'price': widget.price,
                     });
-                    isFav = true;
+                    widget.isFav = true;
                   }
                   setState(() {});
                 },
-                child: isFav == true
+                child: widget.isFav == true
                     ? Icon(
                         Icons.favorite,
                         size: 25,
