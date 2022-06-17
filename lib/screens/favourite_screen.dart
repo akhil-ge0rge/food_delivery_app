@@ -15,6 +15,8 @@ class FavouriteScreen extends StatefulWidget {
 }
 
 class _FavouriteScreenState extends State<FavouriteScreen> {
+  final items =
+      List<String>.generate(favList.length + 1, (index) => '${index + 1}');
   @override
   Widget build(BuildContext context) {
     print("Top favList : $favList");
@@ -75,71 +77,29 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
               child: ListView.builder(
                 itemCount: favList.length,
                 itemBuilder: ((context, index) {
-                  return GestureDetector(
-                    onLongPress: () {
-                      showMenu(
-                          context: context,
-                          position:
-                              RelativeRect.fromLTRB(150.0, 200.0, 50.0, 0.0),
-                          items: <PopupMenuItem>[
-                            PopupMenuItem(
-                              onTap: () {
-                                if (CartList[index]['title'] ==
-                                    favList[index]['title']) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          behavior: SnackBarBehavior.floating,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
-                                          margin: EdgeInsets.all(20),
-                                          dismissDirection:
-                                              DismissDirection.horizontal,
-                                          content: Text("Alredy Existed"),
-                                          duration: Duration(seconds: 1)));
-                                } else {
-                                  CartList.add({
-                                    'image': favList[index]['img'],
-                                    "title": favList[index]['title'],
-                                    "price": favList[index]['price'],
-                                    "count": 1
-                                  });
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          behavior: SnackBarBehavior.floating,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
-                                          margin: EdgeInsets.all(20),
-                                          dismissDirection:
-                                              DismissDirection.horizontal,
-                                          content: Text("Added"),
-                                          duration: Duration(seconds: 1)));
-                                }
-                                print(
-                                    "down favList : ${favList[0]['price'].runtimeType}");
-                                print(
-                                    "down CartList : ${CartList[0]['price'].runtimeType}");
-                              },
-                              child: Text("Add To Cart"),
-                            ),
-                            PopupMenuItem(
-                              child: Text("Remove"),
-                            ),
-                          ]);
+                  final item = items[index];
+                  return Dismissible(
+                    key: Key(item),
+                    onDismissed: (direction) {
+                      setState(() {
+                        favList.removeAt(index);
+                      });
+
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          margin: EdgeInsets.all(20),
+                          dismissDirection: DismissDirection.horizontal,
+                          content: Text("Removed"),
+                          duration: Duration(seconds: 1)));
                     },
                     child: Column(
                       children: [
                         Container(
-                          padding: EdgeInsets.only(
-                            left: 10,
-                            right: 10,
-                          ),
-                          margin: EdgeInsets.only(left: 10, right: 10, top: 10),
                           height: 110,
-                          width: 360,
+                          width: 330,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
@@ -152,68 +112,74 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                             ],
                             color: const Color(0xfffffefe),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                height: 90,
-                                width: 100,
-                                decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(.2),
-                                        spreadRadius: .1,
-                                        blurRadius: 6,
-                                        offset: Offset(0, 4), // Shadow position
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  height: 90,
+                                  width: 100,
+                                  decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(.2),
+                                          spreadRadius: .1,
+                                          blurRadius: 6,
+                                          offset:
+                                              Offset(0, 4), // Shadow position
+                                        ),
+                                      ],
+                                      color: const Color(0xfffffefe),
+                                      borderRadius: BorderRadius.circular(12)),
+                                  child: Image(
+                                      image: AssetImage(
+                                          favList[index]['img'].toString())),
+                                ),
+                                Container(
+                                  height: 50,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.only(right: 20),
+                                        child: Text(
+                                          favList[index]['title'].toString(),
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.grey[700],
+                                            fontFamily: 'Roboto',
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(right: 20),
+                                        child: Text(
+                                          "\$ " +
+                                              favList[index]['price']
+                                                  .toString(),
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey[700],
+                                            fontFamily: 'Roboto',
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
                                       ),
                                     ],
-                                    color: const Color(0xfffffefe),
-                                    borderRadius: BorderRadius.circular(12)),
-                                child: Image(
-                                    image: AssetImage(
-                                        favList[index]['img'].toString())),
-                              ),
-                              Container(
-                                height: 50,
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(right: 20),
-                                      child: Text(
-                                        favList[index]['title'].toString(),
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.grey[700],
-                                          fontFamily: 'Roboto',
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.only(right: 20),
-                                      child: Text(
-                                        "\$ " +
-                                            favList[index]['price'].toString(),
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey[700],
-                                          fontFamily: 'Roboto',
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
                         SizedBox(
                           height: 10,
                         ),
                       ],
+                      // ),
                     ),
                   );
                 }),
