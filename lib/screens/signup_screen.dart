@@ -2,19 +2,16 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:food_delivery_app/screens/home_screen.dart';
-import 'package:food_delivery_app/screens/main_page.dart';
-import 'package:food_delivery_app/screens/signup_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:food_delivery_app/screens/login_screen.dart';
 
-class LogInScreen extends StatefulWidget {
-  LogInScreen({Key? key}) : super(key: key);
+class SignUpScreen extends StatefulWidget {
+  SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  State<LogInScreen> createState() => _LogInScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LogInScreenState extends State<LogInScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   @override
   final TextEditingController emailController = TextEditingController();
 
@@ -24,7 +21,11 @@ class _LogInScreenState extends State<LogInScreen> {
 
   final FocusNode passwordFocus = FocusNode();
 
-  final GlobalKey<FormState> loginKey = GlobalKey<FormState>();
+  final TextEditingController nameController = TextEditingController();
+
+  final FocusNode nameFocus = FocusNode();
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -56,7 +57,7 @@ class _LogInScreenState extends State<LogInScreen> {
                         left: MediaQuery.of(context).size.width / 10),
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "Login",
+                      "Sign Up",
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.grey[700],
@@ -69,7 +70,7 @@ class _LogInScreenState extends State<LogInScreen> {
                     height: MediaQuery.of(context).size.width / 8,
                   ),
                   Form(
-                    key: loginKey,
+                    key: _formKey,
                     child: Container(
                       padding: EdgeInsets.only(
                         left: MediaQuery.of(context).size.width / 10,
@@ -142,6 +143,55 @@ class _LogInScreenState extends State<LogInScreen> {
                             height: 20,
                           ),
                           TextFormField(
+                            controller: nameController,
+                            focusNode: nameFocus,
+                            autofocus: false,
+                            showCursor: false,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Color(0xffeef0f1),
+                              focusColor: Color(0xffeef0f1),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.green),
+                                borderRadius: BorderRadius.circular(35.0),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(35.0),
+                              ),
+                              disabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(35.0),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.red),
+                                borderRadius: BorderRadius.circular(35.0),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.red),
+                                borderRadius: BorderRadius.circular(35.0),
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(35.0),
+                              ),
+                              hintStyle: TextStyle(
+                                fontSize: 17,
+                                color: Colors.grey[700],
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w400,
+                              ),
+                              hintText: 'Full Name',
+                              prefixIcon: Icon(
+                                Icons.account_circle_outlined,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          TextFormField(
                             validator: (pass) {
                               RegExp regex = RegExp(
                                   r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{6,}$');
@@ -206,44 +256,73 @@ class _LogInScreenState extends State<LogInScreen> {
                             ),
                           ),
                           SizedBox(
+                            height: 15,
+                          ),
+                          RichText(
+                            text: TextSpan(children: [
+                              TextSpan(
+                                text: "By signing up you're agree to our",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 12,
+                                  fontFamily: 'Roboto',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              TextSpan(
+                                // recognizer: TapGestureRecognizer()
+                                //   ..onTap = () {
+                                //     Navigator.push(
+                                //         context,
+                                //         MaterialPageRoute(
+                                //           builder: (context) => SignUpScreen(),
+                                //         ));
+                                //   },
+                                text: " Terms & Conditions",
+                                style: TextStyle(
+                                    color: Colors.blueAccent,
+                                    fontSize: 12,
+                                    fontFamily: 'Roboto',
+                                    fontWeight: FontWeight.w400,
+                                    decorationThickness: 2),
+                              ),
+                              TextSpan(
+                                // recognizer: TapGestureRecognizer()
+                                //   ..onTap = () {
+                                //     Navigator.push(
+                                //         context,
+                                //         MaterialPageRoute(
+                                //           builder: (context) => SignUpScreen(),
+                                //         ));
+                                //   },
+                                text: "\nPrivacy Policy",
+                                style: TextStyle(
+                                    color: Colors.blueAccent,
+                                    fontSize: 12,
+                                    fontFamily: 'Roboto',
+                                    fontWeight: FontWeight.w400,
+                                    decorationThickness: 2),
+                              ),
+                            ]),
+                          ),
+                          SizedBox(
                             height: 30,
                           ),
-                          GestureDetector(
-                            onTap: () async {
-                              if (loginKey.currentState!.validate()) {
-                                print(emailController.value.text);
-                                if (emailController.value.text ==
-                                        "akhil@gmail.com" &&
-                                    passwordController.value.text ==
-                                        "Akhil@123") {
-                                  final SharedPreferences sharedPreferences =
-                                      await SharedPreferences.getInstance();
-                                  sharedPreferences.setString(
-                                      'email', emailController.value.text);
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => MainPage(),
-                                      ));
-                                }
-                              }
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              width: MediaQuery.of(context).size.width / 1.7,
-                              height: MediaQuery.of(context).size.width / 6.5,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: Color(0xfff9a01f),
-                              ),
-                              child: Text(
-                                "Login",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.black,
-                                  fontFamily: 'Roboto',
-                                  fontWeight: FontWeight.w500,
-                                ),
+                          Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width / 1.7,
+                            height: MediaQuery.of(context).size.width / 6.5,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Color(0xfff9a01f),
+                            ),
+                            child: Text(
+                              "Submit",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.black,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ),
@@ -253,7 +332,7 @@ class _LogInScreenState extends State<LogInScreen> {
                           RichText(
                             text: TextSpan(children: [
                               TextSpan(
-                                text: "Don't have an account yet?",
+                                text: "Joined us before? ",
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 12,
@@ -267,10 +346,10 @@ class _LogInScreenState extends State<LogInScreen> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => SignUpScreen(),
+                                          builder: (context) => LogInScreen(),
                                         ));
                                   },
-                                text: "  Sign Up",
+                                text: " Login",
                                 style: TextStyle(
                                     color: Colors.blueAccent,
                                     fontSize: 12,

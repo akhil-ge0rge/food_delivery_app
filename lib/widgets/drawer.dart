@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:food_delivery_app/screens/login_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DraweWid extends StatelessWidget {
   const DraweWid({Key? key}) : super(key: key);
@@ -89,29 +91,43 @@ class DraweWid extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(.5),
-                      spreadRadius: .1,
-                      blurRadius: 6,
-                      offset: Offset(0, 4), // Shadow position
-                    ),
-                  ],
-                  color: Color(0xff131313),
-                  borderRadius: BorderRadius.circular(20)),
-              alignment: Alignment.center,
-              height: 50,
-              width: 50,
-              margin: EdgeInsets.all(20),
-              child: Text(
-                "Page",
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.white,
-                  fontFamily: 'Roboto',
-                  fontWeight: FontWeight.w500,
+            SizedBox(
+              height: 100,
+            ),
+            GestureDetector(
+              onTap: () async {
+                SharedPreferences sharedPreferences =
+                    await SharedPreferences.getInstance();
+                sharedPreferences.remove('email');
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext ctx) => LogInScreen()));
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(.5),
+                        spreadRadius: .1,
+                        blurRadius: 6,
+                        offset: Offset(0, 4), // Shadow position
+                      ),
+                    ],
+                    color: Color(0xff131313),
+                    borderRadius: BorderRadius.circular(20)),
+                alignment: Alignment.center,
+                height: 50,
+                width: 50,
+                margin: EdgeInsets.all(20),
+                child: Text(
+                  "Logout",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.white,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),
